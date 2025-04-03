@@ -10,5 +10,5 @@ jobs:
       matrix:
         fruit: ["apple", "banana", "orange", "grape"]
     steps:
-      - run: echo "Testing ${{ matrix.fruit }}"
-        sleep 5 
+        - run: echo "Testing ${{ matrix.fruit }}"
+        - run: sleep 5  # Искусственная задержка для наглядности
