@@ -11,7 +11,8 @@ jobs:
 
   no-secrets:
     runs-on: ubuntu-latest
-    secrets: inherit: false  # Явно отключаем наследование секретов
+    secrets: 
+      inherit: false  # Правильный формат отключения наследования
     steps:
       - name: Check secrets
         run: echo "Secret is ${{ secrets.TEST_SECRET || 'NOT AVAILABLE' }}"
