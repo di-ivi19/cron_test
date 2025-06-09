@@ -1,21 +1,22 @@
-name: Test with Redis
+name: Example with Services
 
 on: [push]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    
-    # Запускаем Redis как сервис
+
     services:
-      redis:  # Название сервиса (можешь выбрать любое)
-        image: redis  # Используем официальный образ Redis
+      redis:  # Имя сервиса (можно использовать в steps как `services.redis`)
+        image: redis:latest  # Докер-образ
         ports:
-          - 6379:6379  # Открываем порт для доступа
+          - 6379:6379  # Проброс портов
+        env:  # Переменные окружения для сервиса
+          REDIS_PASSWORD: "secret123"
+          REDIS_USER: "admin"
 
     steps:
-      - uses: actions/checkout@v4  # Забираем код
-      
-      - name: Test connection to Redis
+      - name: Check Redis connection
         run: |
-          echo "Проверяем, что Redis доступен на localhost:6379"
+          echo "Redis is running with user: ${{ env.REDIS_USER }}"
+          # Здесь можно использовать сервис redis (порт 6379)
