@@ -1,4 +1,4 @@
-name: Example with Services
+name: Test with Redis
 
 on: [push]
 
@@ -7,16 +7,19 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      redis:  # Имя сервиса (можно использовать в steps как `services.redis`)
-        image: redis:latest  # Докер-образ
+      redis:
+        image: redis:7          # Используем последнюю версию Redis
         ports:
-          - 6379:6379  # Проброс портов
-        env:  # Переменные окружения для сервиса
-          REDIS_PASSWORD: "secret123"
-          REDIS_USER: "admin"
+          - 6379:6379          # Пробрасываем порт Redis
+        volumes:
+          - redis_data:/data   # Сохраняем данные Redis в volume
+        options: --health-cmd "redis-cli ping"
 
     steps:
-      - name: Check Redis connection
+      - uses: actions/checkout@v4
+
+      - name: Run tests
         run: |
-          echo "Redis is running with user: ${{ env.REDIS_USER }}"
-          # Здесь можно использовать сервис redis (порт 6379)
+          echo "Подключение к Redis на localhost:6379"
+          # Пример команды для проверки Redis
+          docker run --network host redis redis-cli -h localhost ping
