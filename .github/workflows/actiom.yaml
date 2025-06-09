@@ -1,25 +1,17 @@
-name: Test with Redis
+name: Simple Secrets Example
 
-on: [push]
+on: push  # Запускается при любом пуше в репозиторий
 
 jobs:
-  test:
+  use-secrets:
     runs-on: ubuntu-latest
-
-    services:
-      redis:
-        image: redis:7          # Используем последнюю версию Redis
-        ports:
-          - 6379:6379          # Пробрасываем порт Redis
-        volumes:
-          - redis_data:/data   # Сохраняем данные Redis в volume
-        options: --health-cmd "redis-cli ping"
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Show secret
+        run: echo "My secret is ${{ secrets.TEST_SECRET }}"
 
-      - name: Run tests
-        run: |
-          echo "Подключение к Redis на localhost:6379"
-          # Пример команды для проверки Redis
-          docker run --network host redis redis-cli -h localhost ping
+  no-secrets:
+    runs-on: ubuntu-latest
+    secrets: inherit: false  # Явно отключаем наследование секретов
+    steps:
+      - name: Check secrets
+        run: echo "Secret is ${{ secrets.TEST_SECRET || 'NOT AVAILABLE' }}"
