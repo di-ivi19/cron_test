@@ -1,12 +1,30 @@
-name: Simple Secrets Example
+name: Example with Job-specific Secrets
 
-on: push  # Запускается при любом пуше в репозиторий
+on:
+  push:
 
 jobs:
-  use-secrets:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Show secret
-        run: echo "My secret is ${{ secrets.TEST_SECRET }}"
+      - name: Checkout code
+        uses: actions/checkout@v4
 
+      - name: Use default secret
+        run: echo "${{ secrets.DEPLOY_TOKEN }}"
 
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    # Переопределение или передача секрета конкретно в этот job
+    secrets:
+      DEPLOY_TOKEN: ${{ secrets.ALTERNATE_DEPLOY_TOKEN }}  # Используем другой секрет
+      CUSTOM_SECRET: ${{ secrets.SOME_OTHER_SECRET }}      # Передаем дополнительный секрет
+    steps:
+      - name: Use job-specific secret
+        run: |
+          if [ "${{ secrets.DEPLOY_TOKEN }}" == "${{ secrets.ALTERNATE_TOKEN }}" ]; then
+            echo "✅ Секреты DEPLOY_TOKEN и ALTERNATE_TOKEN совпадают!"
+          else
+            echo "❌ Секреты DEPLOY_TOKEN и ALTERNATE_TOKEN разные!"
+          fi
