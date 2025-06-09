@@ -9,10 +9,4 @@ jobs:
       - name: Show secret
         run: echo "My secret is ${{ secrets.TEST_SECRET }}"
 
-  no-secrets:
-    runs-on: ubuntu-latest
-    secrets: 
-      inherit: false  # Правильный формат отключения наследования
-    steps:
-      - name: Check secrets
-        run: echo "Secret is ${{ secrets.TEST_SECRET || 'NOT AVAILABLE' }}"
+
