@@ -1,14 +1,21 @@
-name: Simple Max-Parallel Example
+name: Test with Redis
 
 on: [push]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 2  # Ограничение одновременных выполнений
-      matrix:
-        fruit: ["apple", "banana", "orange", "grape"]
+    
+    # Запускаем Redis как сервис
+    services:
+      redis:  # Название сервиса (можешь выбрать любое)
+        image: redis  # Используем официальный образ Redis
+        ports:
+          - 6379:6379  # Открываем порт для доступа
+
     steps:
-        - run: echo "Testing ${{ matrix.fruit }}"
-        - run: sleep 5  # Искусственная задержка для наглядности
+      - uses: actions/checkout@v4  # Забираем код
+      
+      - name: Test connection to Redis
+        run: |
+          echo "Проверяем, что Redis доступен на localhost:6379"
