@@ -1,30 +1,40 @@
-name: Example with Job-specific Secrets
-
+name: Manual Workflow Dispatch 2
+ 
 on:
-  push:
-
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        options:
+          - dev
+          - staging
+          - production
+        default: staging
+        description: 'Target deployment environment'
+ 
+      timeout:
+        type: number
+        default: 60
+        description: 'Max time for deployment in seconds'
+ 
+      dry_run:
+        type: boolean
+        default: false
+        description: 'If true, only simulate deployment'
+ 
+      custom_tag:
+        description: 'Custom tag or label for this deployment'
+ 
 jobs:
-  build:
+  display_inputs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Use default secret
-        run: echo "${{ secrets.DEPLOY_TOKEN }}"
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    # Переопределение или передача секрета конкретно в этот job
-    secrets:
-      DEPLOY_TOKEN: ${{ secrets.ALTERNATE_DEPLOY_TOKEN }}  # Используем другой секрет
-      CUSTOM_SECRET: ${{ secrets.SOME_OTHER_SECRET }}      # Передаем дополнительный секрет
-    steps:
-      - name: Use job-specific secret
+ 
+      - name: Display input values
         run: |
-          if [ "${{ secrets.DEPLOY_TOKEN }}" == "${{ secrets.ALTERNATE_TOKEN }}" ]; then
-            echo "✅ Секреты DEPLOY_TOKEN и ALTERNATE_TOKEN совпадают!"
-          else
-            echo "❌ Секреты DEPLOY_TOKEN и ALTERNATE_TOKEN разные!"
-          fi
+          echo "Environment: ${{ inputs.environment }}"
+          echo "Timeout: ${{ inputs.timeout }} seconds"
+          echo "Dry Run: ${{ inputs.dry_run }}"
+          echo "Custom Tag: ${{ inputs.custom_tag }}"
