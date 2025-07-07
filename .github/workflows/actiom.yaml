@@ -1,23 +1,24 @@
-name: Optional Inputs Test
+name: Choice Input Test
 
 on:
   workflow_dispatch:
     inputs:
-      message:
-        description: 'Custom message (optional)'
-        required: false
-        default: 'Hello, GitHub!'
-      is_prod:
-        description: 'Deploy to production?'
-        required: false
-        type: boolean
-        default: false
+      color:
+        description: 'Pick a color'
+        type: choice
+        options: ['red', 'green', 'blue']
+        default: 'green'
+      size:
+        description: 'Select size'
+        type: choice
+        options: ['S', 'M', 'L']
+        required: true
 
 jobs:
-  check-defaults:
+  show-choice:
     runs-on: ubuntu-latest
     steps:
-      - name: Show values
+      - name: Display selection
         run: |
-          echo "Message: ${{ github.event.inputs.message }}"
-          echo "Is production? ${{ github.event.inputs.is_prod }}"
+          echo "Color: ${{ github.event.inputs.color }}"
+          echo "Size: ${{ github.event.inputs.size }}"
