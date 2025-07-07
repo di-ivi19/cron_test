@@ -1,24 +1,22 @@
-name: Choice Input Test
+name: Boolean Input Test
 
 on:
   workflow_dispatch:
     inputs:
-      color:
-        description: 'Pick a color'
-        type: choice
-        options: ['red', 'green', 'blue']
-        default: 'green'
-      size:
-        description: 'Select size'
-        type: choice
-        options: ['S', 'M', 'L']
-        required: true
+      enable_feature:
+        description: 'Enable new feature?'
+        type: boolean
+        default: false
+      force_deploy:
+        description: 'Force deploy?'
+        type: boolean
+        default: true
 
 jobs:
-  show-choice:
+  check-booleans:
     runs-on: ubuntu-latest
     steps:
-      - name: Display selection
+      - name: Show values
         run: |
-          echo "Color: ${{ github.event.inputs.color }}"
-          echo "Size: ${{ github.event.inputs.size }}"
+          echo "Feature enabled: ${{ github.event.inputs.enable_feature }}"
+          echo "Force deploy: ${{ github.event.inputs.force_deploy }}"
