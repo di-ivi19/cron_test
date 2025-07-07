@@ -1,20 +1,18 @@
+name: Special Characters Test
+
 on:
   workflow_dispatch:
     inputs:
-      age:
-        description: 'Your age (must be a number)'
-        required: true
-        type: number
-      email:
-        description: 'Your email (must contain @)'
-        required: true
-        default: 'test@example.com'
+      text_input:
+        description: 'Enter text (try spaces, emoji, quotes)'
+        required: false
+        default: ''
 
 jobs:
-  validate-inputs:
+  handle-text:
     runs-on: ubuntu-latest
     steps:
-      - name: Check age
-        run: echo "${{ github.event.inputs.age }}"
-      - name: Check email
-        run: echo "${{ github.event.inputs.email }}"
+      - name: Display input
+        run: |
+          echo "Input: '${{ github.event.inputs.text_input }}'"
+          echo "Length: ${#{{ github.event.inputs.text_input }}}"
