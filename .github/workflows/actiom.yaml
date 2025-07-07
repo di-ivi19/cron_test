@@ -1,22 +1,21 @@
-name: Boolean Input Test
-
 on:
   workflow_dispatch:
     inputs:
-      enable_feature:
-        description: 'Enable new feature?'
+      message:
+        description: 'Custom message (optional)'
+        required: false
+        default: 'Hello, GitHub!'
+      is_prod:
+        description: 'Deploy to production?'
+        required: false
         type: boolean
         default: false
-      force_deploy:
-        description: 'Force deploy?'
-        type: boolean
-        default: true
 
 jobs:
-  check-booleans:
-    runs-on: ubuntu-latest
+  check-defaults:
+    runs-on: ubuntu-cloud-runner
     steps:
       - name: Show values
         run: |
-          echo "Feature enabled: ${{ github.event.inputs.enable_feature }}"
-          echo "Force deploy: ${{ github.event.inputs.force_deploy }}"
+          echo "Message: ${{ github.event.inputs.message }}"
+          echo "Is production? ${{ github.event.inputs.is_prod }}"
