@@ -1,18 +1,46 @@
-name: Special Characters Test
+name: Upload and Download Artifact Test
 
 on:
+  push:
+
   workflow_dispatch:
-    inputs:
-      text_input:
-        description: 'Enter text (try spaces, emoji, quotes)'
-        required: false
-        default: ''
 
 jobs:
-  handle-text:
+  test-artifact-flow:
     runs-on: ubuntu-latest
     steps:
-      - name: Display input
+      # Шаг 1: Создаем тестовый файл и загружаем его как артефакт
+      - name: Create and Upload Artifact
+        id: upload
         run: |
-          echo "Input: '${{ github.event.inputs.text_input }}'"
-          echo "Length: ${#{{ github.event.inputs.text_input }}}"
+          echo "Test content" > test-file.txt
+          echo "File generated: $(ls)"
+        shell: bash
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        
+        with:
+          name: test-artifact
+          path: test-file.txt
+          retention-days: 1  # Автоматическое удаление через 1 день
+
+      # Шаг 2: Скачиваем артефакт и проверяем его содержимое
+      - name: Download Artifact
+        uses: actions/download-artifact@v3
+        
+        with:
+          name: test-artifact
+          path: ./src
+
+      - name: Verify Downloaded File
+        run: |
+          echo "Downloaded files: $(ls ./src)"
+          if [ -f "./src/test-file.txt" ]; then
+            echo "✅ Artifact downloaded successfully!"
+            echo "File content: $(cat ./src/test-file.txt)"
+          else
+            echo "❌ Artifact not found!"
+            exit 1
+          fi
+        shell: bash
