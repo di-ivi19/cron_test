@@ -1,46 +1,38 @@
-name: Upload and Download Artifact Test
-
+name: Manual Workflow Dispatch
+ 
 on:
-  push:
-
   workflow_dispatch:
-
+    inputs:
+      environment:
+        type: choice
+        options: 
+          - dev
+          - staging
+          - production
+        default: staging
+        description: 'Target deployment environment'
+ 
+      timeout:
+        type: number
+        default: 60
+        description: 'Max time for deployment in seconds'
+ 
+      dry_run:
+        type: boolean
+        default: false
+        description: 'If true, only simulate deployment'
+ 
+      custom_tag:
+        description: 'Custom tag or label for this deployment'
+ 
 jobs:
-  test-artifact-flow:
-    runs-on: ubuntu-latest
+  display_inputs:
+    runs-on: ubuntu-cloud-runner
     steps:
-      # Шаг 1: Создаем тестовый файл и загружаем его как артефакт
-      - name: Create and Upload Artifact
-        id: upload
+ 
+      - name: Display input values
         run: |
-          echo "Test content" > test-file.txt
-          echo "File generated: $(ls)"
-        shell: bash
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        
-        with:
-          name: test-artifact
-          path: test-file.txt
-          retention-days: 1  # Автоматическое удаление через 1 день
-
-      # Шаг 2: Скачиваем артефакт и проверяем его содержимое
-      - name: Download Artifact
-        uses: actions/download-artifact@v4
-        
-        with:
-          name: test-artifact
-          path: ./src
-
-      - name: Verify Downloaded File
-        run: |
-          echo "Downloaded files: $(ls ./src)"
-          if [ -f "./src/test-file.txt" ]; then
-            echo "✅ Artifact downloaded successfully!"
-            echo "File content: $(cat ./src/test-file.txt)"
-          else
-            echo "❌ Artifact not found!"
-            exit 1
-          fi
-        shell: bash
+          echo "Environment: ${{ inputs.environment }}"
+          echo "Timeout: ${{ inputs.timeout }} seconds"
+          echo "Dry Run: ${{ inputs.dry_run }}"
+          echo "Custom Tag: ${{ inputs.additionalProp3 }}"
