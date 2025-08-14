@@ -27,7 +27,7 @@ on:
  
 jobs:
   display_inputs:
-    runs-on: ubuntu-cloud-runner
+    runs-on: ubuntu-latest
     steps:
  
       - name: Display input values
