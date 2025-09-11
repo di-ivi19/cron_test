@@ -1,38 +1,24 @@
-name: Manual Workflow Dispatch
- 
 on:
-  workflow_dispatch:
-    inputs:
-      environment:
-        type: choice
-        options: 
-          - dev
-          - staging
-          - production
-        default: staging
-        description: 'Target deployment environment'
- 
-      timeout:
-        type: number
-        default: 60
-        description: 'Max time for deployment in seconds'
- 
-      dry_run:
-        type: boolean
-        default: false
-        description: 'If true, only simulate deployment'
- 
-      custom_tag:
-        description: 'Custom tag or label for this deployment'
- 
+  push:
+
 jobs:
-  display_inputs:
-    runs-on: ubuntu-latest
+  Job1:
+    name: Job 1
+    runs-on: ubuntu-cloud-runner
     steps:
- 
-      - name: Display input values
-        run: |
-          echo "Environment: ${{ inputs.environment }}"
-          echo "Timeout: ${{ inputs.timeout }} seconds"
-          echo "Dry Run: ${{ inputs.dry_run }}"
-          echo "Custom Tag: ${{ inputs.additionalProp3 }}"
+      - name: sleep
+        run: sleep 3
+  Job2:
+    needs: ob322
+    name: Job 2
+    runs-on: ubuntu-cloud-runner
+    steps:
+    - name: sleep
+      run: sleep 5
+  Job3:
+    needs: Job1
+    name: Job 3
+    runs-on: ubuntu-cloud-runner
+    steps:
+      - name: sleep
+        run: sleep 3
