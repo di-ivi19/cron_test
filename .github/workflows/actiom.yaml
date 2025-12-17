@@ -1,24 +1,23 @@
+# .github/workflows/checkout-external.yml
+name: Checkout External Repo
+
 on:
   push:
+    branches: [ main ]
+  workflow_dispatch:  # чтобы можно было запустить вручную
 
 jobs:
-  Job1:
-    name: Job 1
-    runs-on: ubuntu-cloud-runner
+  checkout-external:
+    runs-on: ubuntu-latest
     steps:
-      - name: sleep
-        run: sleep 3
-  Job2:
-    needs: ob322
-    name: Job 2
-    runs-on: ubuntu-cloud-runner
-    steps:
-    - name: sleep
-      run: sleep 5
-  Job3:
-    needs: Job1
-    name: Job 3
-    runs-on: ubuntu-cloud-runner
-    steps:
-      - name: sleep
-        run: sleep 3
+
+
+      - name: Checkout external public repository
+        uses: actions/checkout@v4
+        with:
+          repository: di-ivi19/test_rep1
+          ref: main
+
+
+      - name: List files in external repo
+        run: ls -la ./vscode
