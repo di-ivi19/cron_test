@@ -20,4 +20,4 @@ jobs:
 
 
       - name: List files in external repo
-        run: ls -la ./vscode
+        run: ls -la
