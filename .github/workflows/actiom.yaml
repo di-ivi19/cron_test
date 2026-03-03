@@ -1,23 +1,19 @@
-# .github/workflows/checkout-external.yml
-name: Checkout External Repo
+name: PR Target Test
 
 on:
-  push:
-    branches: [ main ]
-  workflow_dispatch:  # чтобы можно было запустить вручную
+  pull_request_target:
+   types: [opened, synchronize, closed, edited, reopened]
+   branches:
+     - dev
+     - master
 
 jobs:
-  checkout-external:
-    runs-on: ubuntu-latest
+  security_check:
+    runs-on: img-ubuntu-latest
     steps:
-
-
-      - name: Checkout external public repository
-        uses: actions/checkout@v4
-        with:
-          repository: di-ivi19/test_rep1
-          ref: main
-
-
-      - name: List files in external repo
-        run: ls -la
+   
+      - name: Check Access
+        run: |
+          echo "Running trigger: ${{ github.event_name }}"
+          echo "Target branch: ${{ github.base_ref }}"
+          echo "Source branch: ${{ github.head_ref }}"
