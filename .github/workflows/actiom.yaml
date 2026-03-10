@@ -1,20 +1,41 @@
-name: PR Target Test
+name: Sequential Multi-Job Pipeline
 
 on:
-  pull_request_target:
-   types: [opened, synchronize, closed, edited, reopened]
+  push:
 
-   branches:
-     - dev
-     - main
+  workflow_dispatch:
 
 jobs:
-  security_check:
+  # 1. Первая работа (входная точка)
+  initial-check:
     runs-on: ubuntu-latest
     steps:
-   
-      - name: Check Access
-        run: |
-          echo "Running trigger: ${{ github.event_name }}"
-          echo "Target branch: ${{ github.base_ref }}"
-          echo "Source branch: ${{ github.head_ref }}"
+      - run: echo "Step 1 Initial checks passed."
+
+  # 2. Зависит от initial-check
+  build-frontend:
+    needs: [initial-check]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Step 2 Building frontend..."
+
+  # 3. Тоже зависит от initial-check (идет параллельно с билдом)
+  security-scan:
+    needs: [initial-check]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Step 3 Scanning for vulnerabilities..."
+
+  # 4. Зависит от того, чтобы и билд, и скан прошли успешно
+  run-tests:
+    needs: [build-frontend, security-scan]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Step 4 Running integration tests..."
+
+  # 5. Финальный этап, ждет завершения тестов
+  deploy:
+    needs: [run-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Step 5 Deploying to production! 🚀"
