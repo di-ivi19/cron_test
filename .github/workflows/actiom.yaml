@@ -1,41 +1,23 @@
-name: Sequential Multi-Job Pipeline
-
-on:
+name: xBB-setenv
+on: 
   push:
 
-  workflow_dispatch:
-
 jobs:
-  # 1. Первая работа (входная точка)
-  initial-check:
+  t:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Step 1 Initial checks passed."
+      - name: Set environment variable
+        run: echo "XBBP=pwned" >> $GITHUB_ENV
 
-  # 2. Зависит от initial-check
-  build-frontend:
-    needs: [initial-check]
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Step 2 Building frontend..."
+      - name: Print environment variable
+        run: echo "XBBP=${XBBP:-not-set}"
 
-  # 3. Тоже зависит от initial-check (идет параллельно с билдом)
-  security-scan:
-    needs: [initial-check]
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Step 3 Scanning for vulnerabilities..."
+      - name: Add path to GITHUB_PATH
+        run: echo "/tmp/xbbbin" >> $GITHUB_PATH
 
-  # 4. Зависит от того, чтобы и билд, и скан прошли успешно
-  run-tests:
-    needs: [build-frontend, security-scan]
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Step 4 Running integration tests..."
-
-  # 5. Финальный этап, ждет завершения тестов
-  deploy:
-    needs: [run-tests]
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Step 5 Deploying to production! 🚀"
+      - name: Setup hijack binary and check PATH
+        run: |
+          mkdir -p /tmp/xbbbin
+          printf '#!/bin/sh\necho XBB-HIJACK\n' > /tmp/xbbbin/node
+          chmod +x /tmp/xbbbin/node
+          echo "PATH_head=$(echo $PATH | cut -d: -f1)"
