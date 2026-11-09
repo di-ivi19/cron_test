@@ -1,23 +1,13 @@
-name: xBB-setenv
-on: 
-  push:
+name: Invalid Workflow
+
+on: push
 
 jobs:
-  t:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Set environment variable
-        run: echo "XBBP=pwned" >> $GITHUB_ENV
+      - run: echo "Build"
 
-      - name: Print environment variable
-        run: echo "XBBP=${XBBP:-not-set}"
-
-      - name: Add path to GITHUB_PATH
-        run: echo "/tmp/xbbbin" >> $GITHUB_PATH
-
-      - name: Setup hijack binary and check PATH
-        run: |
-          mkdir -p /tmp/xbbbin
-          printf '#!/bin/sh\necho XBB-HIJACK\n' > /tmp/xbbbin/node
-          chmod +x /tmp/xbbbin/node
-          echo "PATH_head=$(echo $PATH | cut -d: -f1)"
+  test
+    needs: build
+    runs-on: ubuntu-latest
