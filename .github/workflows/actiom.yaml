@@ -1,25 +1,28 @@
-name: Skipped Jobs
+name: Job Concurrency
 
-on: 
-  push:
-  workflow_dispatch:
+on:
+   push:
+   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    concurrency:
+      group: build-group
+      cancel-in-progress: false
     steps:
       - run: echo "Build"
 
-  optional_test:
-    needs: build
-    if: false
+  test:
     runs-on: ubuntu-latest
-    continue-on-error: true
+    concurrency:
+      group: test-group
+      cancel-in-progress: true
     steps:
-      - run: echo "Optional test"
+      - run: echo "Test"
 
   deploy:
-    needs: build
+    needs: [build, test]
     runs-on: ubuntu-latest
     steps:
       - run: echo "Deploy"
