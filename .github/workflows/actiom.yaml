@@ -1,28 +1,105 @@
-name: Job Concurrency
+
+name: Independent Concurrency Groups
 
 on:
-   push:
-   workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
-  build:
+  job_01:
+    name: Job 01
     runs-on: ubuntu-latest
     concurrency:
-      group: build-group
+      group: concurrency-group-01
       cancel-in-progress: false
     steps:
-      - run: echo "Build"
+      - run: sleep 60
 
-  test:
+  job_02:
+    name: Job 02
     runs-on: ubuntu-latest
     concurrency:
-      group: test-group
-      cancel-in-progress: true
+      group: concurrency-group-02
+      cancel-in-progress: false
     steps:
-      - run: echo "Test"
+      - run: sleep 60
 
-  deploy:
-    needs: [build, test]
+  job_03:
+    name: Job 03
     runs-on: ubuntu-latest
+    concurrency:
+      group: concurrency-group-03
+      cancel-in-progress: false
     steps:
-      - run: echo "Deploy"
+      - run: sleep 60
+
+  job_04:
+    name: Job 04
+    runs-on: ubuntu-latest
+    concurrency:
+      group: concurrency-group-04
+      cancel-in-progress: false
+    steps:
+      - run: sleep 60
+
+  job_05:
+    name: Job 05
+    runs-on: ubuntu-latest
+    concurrency:
+      group: concurrency-group-05
+      cancel-in-progress: false
+    steps:
+      - run: sleep 60
+
+  job_06:
+    name: Job 06
+    runs-on: ubuntu-latest
+    concurrency:
+      group: concurrency-group-06
+      cancel-in-progress: false
+    steps:
+      - run: sleep 60
+
+  job_07:
+    name: Job 07
+    runs-on: ubuntu-latest
+    concurrency:
+      group: concurrency-group-07
+      cancel-in-progress: false
+    steps:
+      - run: sleep 60
+
+  job_08:
+    name: Job 08
+    runs-on: ubuntu-latest
+    concurrency:
+      group: concurrency-group-08
+      cancel-in-progress: false
+    steps:
+      - run: sleep 60
+
+  job_09:
+    name: Job 09
+    runs-on: ubuntu-latest
+    concurrency:
+      group: concurrency-group-09
+      cancel-in-progress: false
+    steps:
+      - run: sleep 60
+
+  job_10:
+    name: Job 10 - Matrix
+    strategy:
+      matrix:
+        os: [ubuntu-latest, img-ubuntu-latest]
+        node: [12, 14, 16]
+        include:
+          - os: macos-latest
+            node: 16
+            experimental: true
+    runs-on: ${{ matrix.os }}
+    concurrency:
+      group: concurrency-group-10-${{ matrix.os }}-${{ matrix.node }}
+      cancel-in-progress: false
+    steps:
+      - name: Execute matrix job
+        run: echo "Running on ${{ matrix.os }} with Node.js ${{ matrix.node }}"
