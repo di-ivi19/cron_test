@@ -1,67 +1,29 @@
-
-name: Different Concurrency Groups
+name: TC-02 Same Groups
 
 on:
   workflow_dispatch:
-  push:
 
 jobs:
   job_01:
-    name: Job 01 - Group A
+    name: Job 01
     runs-on: ubuntu-latest
     concurrency:
-      group: group-A
-    #  cancel-in-progress: false
+      group: shared-group
+      cancel-in-progress: false
     steps:
-      - name: Execute Job 01
-        run: |
-          echo "Job 01 - Group A"
-          sleep 30
+      - run: |
+          echo "Job 01 started"
+          sleep 90
+          echo "Job 01 finished"
 
   job_02:
-    name: Job 02 - Group A
+    name: Job 02
     runs-on: ubuntu-latest
     concurrency:
-      group: group-A
- #  cancel-in-progress: false
+      group: shared-group
+      cancel-in-progress: false
     steps:
-      - name: Execute Job 02
-        run: |
-          echo "Job 02 - Group A"
-          sleep 30
-
-  job_03:
-    name: Job 03 - Group B
-    runs-on: ubuntu-latest
-    concurrency:
-      group: group-B
-     #  cancel-in-progress: false
-    steps:
-      - name: Execute Job 03
-        run: |
-          echo "Job 03 - Group B"
-          sleep 30
-
-  job_04:
-    name: Job 04 - Group B
-    runs-on: ubuntu-latest
-    concurrency:
-      group: group-B
-      #  cancel-in-progress: false
-    steps:
-      - name: Execute Job 04
-        run: |
-          echo "Job 04 - Group B"
-          sleep 30
-
-  job_05:
-    name: Job 05 - Group C
-    runs-on: ubuntu-latest
-    concurrency:
-      group: group-C
-       #  cancel-in-progress: false
-    steps:
-      - name: Execute Job 05
-        run: |
-          echo "Job 05 - Group C"
-          sleep 30
+      - run: |
+          echo "Job 02 started"
+          sleep 90
+          echo "Job 02 finished"
