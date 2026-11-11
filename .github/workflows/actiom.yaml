@@ -1,53 +1,28 @@
-name: TC-03 Multiple Groups
+name: TC-04 Cancel In Progress
 
 on:
   workflow_dispatch:
 
 jobs:
   job_01:
-    name: Job 01 - Group A
+    name: Job 01 - First Run
     runs-on: ubuntu-latest
     concurrency:
-      group: group-A
+      group: cancel-test
+      cancel-in-progress: true
     steps:
-      - run: sleep 60
+      - run: |
+          echo "First job started"
+          sleep 180
+          echo "First job finished"
 
   job_02:
-    name: Job 02 - Group A
+    name: Job 02 - Second Run
     runs-on: ubuntu-latest
     concurrency:
-      group: group-A
+      group: cancel-test
+      cancel-in-progress: true
     steps:
-      - run: sleep 60
-
-  job_03:
-    name: Job 03 - Group B
-    runs-on: ubuntu-latest
-    concurrency:
-      group: group-B
-    steps:
-      - run: sleep 60
-
-  job_04:
-    name: Job 04 - Group B
-    runs-on: ubuntu-latest
-    concurrency:
-      group: group-B
-    steps:
-      - run: sleep 60
-
-  job_05:
-    name: Job 05 - Group C
-    runs-on: ubuntu-latest
-    concurrency:
-      group: group-C
-    steps:
-      - run: sleep 60
-
-  job_06:
-    name: Job 06 - Group C
-    runs-on: ubuntu-latest
-    concurrency:
-      group: group-C
-    steps:
-      - run: sleep 60
+      - run: |
+          echo "Second job started"
+          sleep 30
