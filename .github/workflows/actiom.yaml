@@ -1,6 +1,7 @@
 name: Skipped Jobs
 
-on: push
+on: 
+  push:
 
 jobs:
   build:
