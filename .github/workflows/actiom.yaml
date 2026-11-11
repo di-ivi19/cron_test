@@ -1,105 +1,67 @@
 
-name: Independent Concurrency Groups
+name: Different Concurrency Groups
 
 on:
   workflow_dispatch:
+  push:
 
 jobs:
   job_01:
-    name: Job 01
+    name: Job 01 - Group A
     runs-on: ubuntu-latest
     concurrency:
-      group: concurrency-group-01
-      cancel-in-progress: false
+      group: group-A
+    #  cancel-in-progress: false
     steps:
-      - run: sleep 60
+      - name: Execute Job 01
+        run: |
+          echo "Job 01 - Group A"
+          sleep 30
 
   job_02:
-    name: Job 02
+    name: Job 02 - Group A
     runs-on: ubuntu-latest
     concurrency:
-      group: concurrency-group-02
-      cancel-in-progress: false
+      group: group-A
+ #  cancel-in-progress: false
     steps:
-      - run: sleep 60
+      - name: Execute Job 02
+        run: |
+          echo "Job 02 - Group A"
+          sleep 30
 
   job_03:
-    name: Job 03
+    name: Job 03 - Group B
     runs-on: ubuntu-latest
     concurrency:
-      group: concurrency-group-03
-      cancel-in-progress: false
+      group: group-B
+     #  cancel-in-progress: false
     steps:
-      - run: sleep 60
+      - name: Execute Job 03
+        run: |
+          echo "Job 03 - Group B"
+          sleep 30
 
   job_04:
-    name: Job 04
+    name: Job 04 - Group B
     runs-on: ubuntu-latest
     concurrency:
-      group: concurrency-group-04
-      cancel-in-progress: false
+      group: group-B
+      #  cancel-in-progress: false
     steps:
-      - run: sleep 60
+      - name: Execute Job 04
+        run: |
+          echo "Job 04 - Group B"
+          sleep 30
 
   job_05:
-    name: Job 05
+    name: Job 05 - Group C
     runs-on: ubuntu-latest
     concurrency:
-      group: concurrency-group-05
-      cancel-in-progress: false
+      group: group-C
+       #  cancel-in-progress: false
     steps:
-      - run: sleep 60
-
-  job_06:
-    name: Job 06
-    runs-on: ubuntu-latest
-    concurrency:
-      group: concurrency-group-06
-      cancel-in-progress: false
-    steps:
-      - run: sleep 60
-
-  job_07:
-    name: Job 07
-    runs-on: ubuntu-latest
-    concurrency:
-      group: concurrency-group-07
-      cancel-in-progress: false
-    steps:
-      - run: sleep 60
-
-  job_08:
-    name: Job 08
-    runs-on: ubuntu-latest
-    concurrency:
-      group: concurrency-group-08
-      cancel-in-progress: false
-    steps:
-      - run: sleep 60
-
-  job_09:
-    name: Job 09
-    runs-on: ubuntu-latest
-    concurrency:
-      group: concurrency-group-09
-      cancel-in-progress: false
-    steps:
-      - run: sleep 60
-
-  job_10:
-    name: Job 10 - Matrix
-    strategy:
-      matrix:
-        os: [ubuntu-latest, img-ubuntu-latest]
-        node: [12, 14, 16]
-        include:
-          - os: macos-latest
-            node: 16
-            experimental: true
-    runs-on: ${{ matrix.os }}
-    concurrency:
-      group: concurrency-group-10-${{ matrix.os }}-${{ matrix.node }}
-      cancel-in-progress: false
-    steps:
-      - name: Execute matrix job
-        run: echo "Running on ${{ matrix.os }} with Node.js ${{ matrix.node }}"
+      - name: Execute Job 05
+        run: |
+          echo "Job 05 - Group C"
+          sleep 30
