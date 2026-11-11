@@ -1,28 +1,23 @@
-name: TC-04 Cancel In Progress
+name: Skipped Jobs
 
-on:
-  workflow_dispatch:
+on: push
 
 jobs:
-  job_01:
-    name: Job 01 - First Run
+  build:
     runs-on: ubuntu-latest
-    concurrency:
-      group: cancel-test
-      cancel-in-progress: true
     steps:
-      - run: |
-          echo "First job started"
-          sleep 180
-          echo "First job finished"
+      - run: echo "Build"
 
-  job_02:
-    name: Job 02 - Second Run
+  optional_test:
+    needs: build
+    if: false
     runs-on: ubuntu-latest
-    concurrency:
-      group: cancel-test
-      cancel-in-progress: true
+    continue-on-error: true
     steps:
-      - run: |
-          echo "Second job started"
-          sleep 30
+      - run: echo "Optional test"
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Deploy"
