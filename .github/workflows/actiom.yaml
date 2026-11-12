@@ -1,24 +1,20 @@
-name: Skipped Jobs
+name: Проверка matrix. Исключение определенных комбинаций
 
-on: 
-  push:
+on:
+  workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Build"
+  strategy:
+    matrix:
+      os: [ubuntu-latest, img-ubuntu-latest]
+      node: [12, 14, 16]
+      exclude:
+        - os: ubuntu-latest
+          node: 12
+        - os: img-ubuntu-latest
+          node: 16
 
-  optional_test:
-    needs: build
-    if: false
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    steps:
-      - run: echo "Optional test"
+    runs-on: ${{ matrix.os }}
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
     steps:
-      - run: echo "Deploy"
+      - run: echo "Running on ${{ matrix.os }} with Node.js ${{ matrix.node }}"
